@@ -3,7 +3,7 @@
 
 Two Moon Dataset + Neural Network Training + Animation + (Chinese and English)
 
-简明神经网络 申富饶
+简明神经网络 申富饶  
 读书课后练习
 
 Usages:
