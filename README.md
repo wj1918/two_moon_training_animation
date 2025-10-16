@@ -1,7 +1,10 @@
+
 双月数据集 + 神经网络 + 动态可视化（含中文字体）
 
 Two Moon Dataset + Neural Network Training + Animation + (Chinese and English)
 
+简明神经网络 申富饶
+读书课后练习
 
 Usages:
 1. start the program without argument, The animation will open in a new window.        
