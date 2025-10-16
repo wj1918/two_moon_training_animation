@@ -12,17 +12,18 @@ import matplotlib.animation as animation
 import numpy as np
 from sklearn.datasets import make_moons
 from matplotlib import rcParams
-
+import sys
 # -------------------------------------------------
 # 🈶 设置中文字体（黑体/思源黑体/微软雅黑）
 # -------------------------------------------------
 rcParams['font.sans-serif'] = ['SimHei']   # 设置字体为黑体（支持中文）
+
 rcParams['axes.unicode_minus'] = False      # 解决负号显示问题
 
 # -------------------------------------------------
 # 1️⃣ 生成双月数据集 / Generate Double Moon Dataset
 # -------------------------------------------------
-X, y = make_moons(n_samples=500, noise=0.2, random_state=42)
+X, y = make_moons(n_samples=500, noise=0.1, random_state=42)
 X = torch.tensor(X, dtype=torch.float32)
 y = torch.tensor(y, dtype=torch.float32).reshape(-1, 1)
 
@@ -94,8 +95,13 @@ def update(frame):
     ax1.set_xlim(-2, 3)
     ax1.set_ylim(-1.5, 2)
     ax1.set_title(f"决策边界 / Decision Boundary (Epoch {frame*10})", fontsize=12)
-    ax1.set_xlabel("特征 x₁ / Feature x₁")
-    ax1.set_ylabel("特征 x₂ / Feature x₂")
+
+    # UserWarning: Glyph 8322 (\N{SUBSCRIPT TWO}) missing from font(s)
+    # ax1.set_xlabel("特征 x₁ / Feature x₁")
+    # ax1.set_ylabel("特征 x₂ / Feature x₂")
+
+    ax1.set_xlabel("特征 $x_1$ / Feature $x_1$")
+    ax1.set_ylabel("特征 $x_2$ / Feature $x_2$")
 
     # 显示当前损失与准确率 / Show Loss and Accuracy
     ax1.text(-1.9, 1.7, f"损失 Loss: {loss.item():.3f}\n准确率 Accuracy: {acc*100:.1f}%",
@@ -121,8 +127,12 @@ ani = animation.FuncAnimation(fig, update, frames=100, interval=120, blit=False,
 
 plt.tight_layout()
 plt.show()
-
 # -------------------------------------------------
 # ✅ 可选：保存动画 / Optional: Save Animation
 # -------------------------------------------------
+print("saving...")
 ani.save("双月神经网络训练动画_two_moon_training.gif", writer="pillow", fps=15)
+print("双月神经网络训练动画_two_moon_training.gif saved")
+
+sys.exit(0)
+
