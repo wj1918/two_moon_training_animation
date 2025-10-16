@@ -23,7 +23,9 @@ rcParams['axes.unicode_minus'] = False      # 解决负号显示问题
 # -------------------------------------------------
 # 1️⃣ 生成双月数据集 / Generate Double Moon Dataset
 # -------------------------------------------------
+
 X, y = make_moons(n_samples=500, noise=0.1, random_state=42)
+
 X = torch.tensor(X, dtype=torch.float32)
 y = torch.tensor(y, dtype=torch.float32).reshape(-1, 1)
 
@@ -61,6 +63,9 @@ fig.suptitle("双月数据集神经网络训练动画 / Two-Moon Neural Network 
 losses = []
 accuracies = []
 
+frames = 100          # 动画帧数（确保你期望保存的帧数） / animation frames
+steps_per_frame = 10  # 每帧内训练的步数 -> total training iterations = frames * steps_per_frame
+
 # -------------------------------------------------
 # 5️⃣ 计算准确率函数 / Accuracy Function
 # -------------------------------------------------
@@ -73,7 +78,7 @@ def accuracy(preds, labels):
 # -------------------------------------------------
 def update(frame):
     # 每帧训练若干次 / Train multiple times per frame for faster convergence
-    for _ in range(10):
+    for _ in range(steps_per_frame):
         optimizer.zero_grad()
         outputs = net(X)
         loss = criterion(outputs, y)
@@ -94,7 +99,7 @@ def update(frame):
     ax1.scatter(X[:, 0], X[:, 1], c=y.squeeze(), cmap="coolwarm", edgecolor='k')
     ax1.set_xlim(-2, 3)
     ax1.set_ylim(-1.5, 2)
-    ax1.set_title(f"决策边界 / Decision Boundary (Epoch {frame*10})", fontsize=12)
+    ax1.set_title(f"决策边界 / Decision Boundary (Epoch {frame*steps_per_frame})", fontsize=12)
 
     # UserWarning: Glyph 8322 (\N{SUBSCRIPT TWO}) missing from font(s)
     # ax1.set_xlabel("特征 x₁ / Feature x₁")
@@ -113,7 +118,7 @@ def update(frame):
     ax2.set_title("训练损失变化曲线 / Training Loss Curve", fontsize=12)
     ax2.set_xlabel("训练轮次 / Epoch")
     ax2.set_ylabel("损失值 / Loss")
-    ax2.set_xlim(0, 1000)
+    ax2.set_xlim(0, frames)
     ax2.set_ylim(0, max(losses[0], 0.8))
     ax2.grid(True, linestyle="--", alpha=0.5)
     ax2.legend()
@@ -123,16 +128,20 @@ def update(frame):
 # -------------------------------------------------
 # 7️⃣ 创建动画 / Create Animation
 # -------------------------------------------------
-ani = animation.FuncAnimation(fig, update, frames=100, interval=120, blit=False, repeat=False)
+ani = animation.FuncAnimation(fig, update, frames=frames, interval=120, blit=False, repeat=False)
 
-plt.tight_layout()
-plt.show()
-# -------------------------------------------------
-# ✅ 可选：保存动画 / Optional: Save Animation
-# -------------------------------------------------
-print("saving...")
-ani.save("双月神经网络训练动画_two_moon_training.gif", writer="pillow", fps=15)
-print("双月神经网络训练动画_two_moon_training.gif saved")
+# -------------------------------
+#  Check argument: save or show
+# -------------------------------
+
+if len(sys.argv) > 1 and sys.argv[1].lower() == "gif":
+    gif_path = "two_moon_training.gif"
+    pillow_writer = animation.PillowWriter(fps=15)  # 指定帧率
+    ani.save("two_moon_training.gif", writer=pillow_writer, dpi=80)
+    print("GIF file saved ", gif_path)
+else:
+    plt.tight_layout()
+    plt.show()
 
 sys.exit(0)
 
