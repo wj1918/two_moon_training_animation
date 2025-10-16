@@ -8,4 +8,6 @@ Usages:
 `python two_moon_training_with_loss.py`
 2. start the program with "gif" argument, the animation will be saved to a gif file  
 `python two_moon_training_with_loss.py gif`  
-GIF file saved two_moon_training.gif
+GIF file saved two_moon_training.gif  
+
+![two moon training](two_moon_training.gif)
